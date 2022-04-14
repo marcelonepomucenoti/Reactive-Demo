@@ -26,8 +26,8 @@ class AgendaServiceImpl(@Autowired val agendaRepository: AgendaRepository) : Age
     }
 
     override fun save(agendaRequestDTO: AgendaRequestDTO): Mono<Agenda> {
-        return this.findByName(agendaRequestDTO.name).map { p -> Agenda(p.getName()) }.flatMap<Agenda> {
-            throw Exception("Agenda já cadastrada!")
+        return this.findByName(agendaRequestDTO.name).mapNotNull { p -> Agenda(p.getName()) }.flatMap<Agenda> {
+            Mono.error(Exception("Agenda já cadastrada!"))
         }.switchIfEmpty {
             val agenda: Agenda = AgendaBuilder.builder().name(agendaRequestDTO.name).build()
             agendaRepository.save(agenda)
