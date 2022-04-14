@@ -1,12 +1,12 @@
 package com.apirest.demo.application.builders
 
 import com.apirest.demo.application.entity.Session
-import java.util.Date
+import java.util.*
 
 class SessionBuilder {
     private lateinit var idAgenda: String
     private lateinit var nameAgenda: String
-    private lateinit var validity: Date
+    private var validity: Date? = null
 
     companion object {
         fun builder(): SessionBuilder {
@@ -24,7 +24,7 @@ class SessionBuilder {
         return this
     }
 
-    fun validity(validity: Date): SessionBuilder {
+    fun validity(validity: Date?): SessionBuilder {
         this.validity = validity
         return this
     }
@@ -33,7 +33,15 @@ class SessionBuilder {
         return Session(
             idAgenda = this.idAgenda,
             nameAgenda = this.nameAgenda,
-            validity = this.validity
+            validity = this.validity ?: getDefaultValidity()
         )
+    }
+
+    private fun getDefaultValidity(): Date {
+        val date = Date()
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.MINUTE, 1)
+        return calendar.time
     }
 }

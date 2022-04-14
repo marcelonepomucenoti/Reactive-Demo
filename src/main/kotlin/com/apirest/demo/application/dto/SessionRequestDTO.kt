@@ -4,5 +4,5 @@ import java.util.Date
 
 class SessionRequestDTO(
     val idAgenda: String,
-    val validity: Date
+    val validity: Date?
 )
