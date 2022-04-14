@@ -7,4 +7,5 @@ import reactor.core.publisher.Mono
 interface AssociateService {
     fun save(associateRequestDTO: AssociateRequestDTO): Mono<Associate>
     fun findById(id: String): Mono<Associate>
+    fun findByCpf(cpf: String): Mono<Associate>
 }

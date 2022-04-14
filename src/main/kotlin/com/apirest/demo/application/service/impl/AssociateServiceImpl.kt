@@ -12,6 +12,10 @@ import reactor.core.publisher.Mono
 @Service
 class AssociateServiceImpl(@Autowired val associateRepository: AssociateRepository) : AssociateService {
 
+    override fun findByCpf(cpf: String): Mono<Associate> {
+        return associateRepository.findByCpf(cpf)
+    }
+
     override fun findById(id: String): Mono<Associate> {
         return associateRepository.findById(id)
     }

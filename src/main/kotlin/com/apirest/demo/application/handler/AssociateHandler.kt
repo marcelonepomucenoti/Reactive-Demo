@@ -17,11 +17,24 @@ import java.net.URI
 @Component
 class AssociateHandler(@Autowired val associateService: AssociateService) {
 
+    fun findByCpf(request: ServerRequest): Mono<ServerResponse> {
+        val cpf: String = request.pathVariable("cpf")
+        return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(associateService.findByCpf(cpf), Associate::class.java)
+    }
+
+    fun findById(request: ServerRequest): Mono<ServerResponse> {
+        val id: String = request.pathVariable("id")
+        return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(associateService.findById(id), Associate::class.java)
+    }
+
     fun save(request: ServerRequest): Mono<ServerResponse> {
         val associateRequestDTO = request.bodyToMono<AssociateRequestDTO>()
         return created(URI.create("teste"))
             .contentType(MediaType.APPLICATION_JSON)
             .body(fromPublisher(associateRequestDTO.flatMap(associateService::save), Associate::class.java))
     }
-
 }
