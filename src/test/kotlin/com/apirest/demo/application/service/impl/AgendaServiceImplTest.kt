@@ -4,7 +4,6 @@ import com.apirest.demo.application.builders.AgendaBuilder
 import com.apirest.demo.application.dto.AgendaRequestDTO
 import com.apirest.demo.application.repository.AgendaRepository
 import com.apirest.demo.application.service.AgendaService
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -113,8 +112,11 @@ internal class AgendaServiceImplTest {
 
         val agendaRequestDTO = AgendaRequestDTO("saveAgenda")
 
-        Assertions.assertThrows(Exception::class.java) {
-            var teste = agendaService.save(agendaRequestDTO)
-        }
+        val agenda = agendaService.save(agendaRequestDTO)
+
+        StepVerifier
+            .create(agenda)
+            .expectError()
+            .verify()
     }
 }
