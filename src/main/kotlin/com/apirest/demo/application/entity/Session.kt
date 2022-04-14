@@ -16,4 +16,17 @@ class Session(
     fun getId(): String {
         return this.id
     }
+
+    fun getIdAgenda(): String {
+        return this.idAgenda
+    }
+
+    fun getNameAgenda(): String {
+        return this.nameAgenda
+    }
+
+    fun getValidity(): Date {
+        return this.validity
+    }
+
 }

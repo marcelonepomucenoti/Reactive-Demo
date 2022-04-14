@@ -1,12 +1,15 @@
 package com.apirest.demo.application.builders
 
 import com.apirest.demo.application.entity.Votes
+import kotlin.properties.Delegates
+
 
 class VotesBuilder {
     private lateinit var idAssociate: String
     private lateinit var idAgenda: String
     private lateinit var idSession: String
-    private var vote: Boolean = false
+    private var vote by Delegates.notNull<Boolean>()
+
 
     companion object {
         fun builder(): VotesBuilder {
