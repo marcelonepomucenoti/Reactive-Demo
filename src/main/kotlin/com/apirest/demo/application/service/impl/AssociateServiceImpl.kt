@@ -6,8 +6,11 @@ import com.apirest.demo.application.entity.Associate
 import com.apirest.demo.application.repository.AssociateRepository
 import com.apirest.demo.application.service.AssociateService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Service
 class AssociateServiceImpl(@Autowired val associateRepository: AssociateRepository) : AssociateService {
@@ -21,11 +24,16 @@ class AssociateServiceImpl(@Autowired val associateRepository: AssociateReposito
     }
 
     override fun save(associateRequestDTO: AssociateRequestDTO): Mono<Associate> {
-        val associate: Associate =
-            AssociateBuilder.builder()
-                .name(associateRequestDTO.name)
-                .cpf(associateRequestDTO.cpf)
-                .build()
-        return associateRepository.save(associate)
+        return this.findByCpf(associateRequestDTO.cpf).mapNotNull { p -> Associate(p.getName(), p.getCpf()) }
+            .flatMap<Associate> {
+                Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "member already registered!"))
+            }.switchIfEmpty {
+                val associate: Associate =
+                    AssociateBuilder.builder()
+                        .name(associateRequestDTO.name)
+                        .cpf(associateRequestDTO.cpf)
+                        .build()
+                associateRepository.save(associate)
+            }
     }
 }
