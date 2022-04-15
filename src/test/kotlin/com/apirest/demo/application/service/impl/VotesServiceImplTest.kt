@@ -7,14 +7,14 @@ import com.apirest.demo.application.dto.VotesRequestDTO
 import com.apirest.demo.application.repository.VotesRepository
 import com.apirest.demo.application.restClient.ValidateCpfWebClient
 import com.apirest.demo.application.service.AssociateService
+import com.apirest.demo.application.service.MensageriaService
 import com.apirest.demo.application.service.SessionService
 import com.apirest.demo.application.service.VotesService
 import com.apirest.demo.application.vo.ValidateCpfResponseVo
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.boot.test.context.SpringBootTest
@@ -41,9 +41,12 @@ internal class VotesServiceImplTest {
     @Mock
     private lateinit var validateCpfWebClient: ValidateCpfWebClient
 
+    @Mock
+    private lateinit var mensageriaService: MensageriaService
+
     @BeforeEach
     fun setup() {
-        votesService = VotesServiceImpl(associateService, sessionService, votesRepository, validateCpfWebClient)
+        votesService = VotesServiceImpl(associateService, sessionService, votesRepository, validateCpfWebClient, mensageriaService)
     }
 
     @Test
