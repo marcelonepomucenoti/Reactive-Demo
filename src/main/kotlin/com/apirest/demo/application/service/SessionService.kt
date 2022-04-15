@@ -8,5 +8,6 @@ import reactor.core.publisher.Mono
 interface SessionService {
     fun findAll(): Flux<Session>
     fun findById(id: String): Mono<Session>
+    fun findByIdAgenda(idAgenda: String): Mono<Session>
     fun save(sessionRequestDTO: SessionRequestDTO): Mono<Session>
 }
