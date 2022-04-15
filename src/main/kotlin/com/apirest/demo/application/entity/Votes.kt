@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 class Votes(
     private var idAgenda: String,
-    private var idSession: String,
     private var idAssociate: String,
     private var vote: Boolean,
 ) {
@@ -15,10 +14,6 @@ class Votes(
 
     fun getIdAgenda(): String {
         return this.idAgenda
-    }
-
-    fun getIdSession(): String {
-        return this.idSession
     }
 
     fun getIdAssociate(): String {
