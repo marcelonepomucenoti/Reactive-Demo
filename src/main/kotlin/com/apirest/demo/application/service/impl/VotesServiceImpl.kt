@@ -6,8 +6,10 @@ import com.apirest.demo.application.dto.VotesRequestDTO
 import com.apirest.demo.application.entity.Associate
 import com.apirest.demo.application.entity.Session
 import com.apirest.demo.application.entity.Votes
+import com.apirest.demo.application.model.PostVoteMessage
 import com.apirest.demo.application.repository.VotesRepository
 import com.apirest.demo.application.service.AssociateService
+import com.apirest.demo.application.service.MensageriaService
 import com.apirest.demo.application.service.SessionService
 import com.apirest.demo.application.service.VotesService
 import com.apirest.demo.application.vo.ValidateCpfResponseVo
@@ -24,7 +26,8 @@ class VotesServiceImpl(
     @Autowired val associateService: AssociateService,
     @Autowired val sessionService: SessionService,
     @Autowired val votesRepository: VotesRepository,
-    @Autowired val validateCpfWebClient: ValidateCpfWebClient
+    @Autowired val validateCpfWebClient: ValidateCpfWebClient,
+    @Autowired val mensageriaService: MensageriaService
 ) : VotesService {
 
     override fun findByIdAgendaAndIdAssociate(idAgenda: String, idAssociate: String): Mono<Votes> {
@@ -50,13 +53,20 @@ class VotesServiceImpl(
                                             .vote(votesRequestDTO.vote)
                                             .build()
 
-                                        votesRepository.save(votes)
+                                        val monoVotes: Mono<Votes>  = votesRepository.save(votes)
+                                        sendMessageVote(votesRequestDTO)
+                                        monoVotes
                                     } else Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Unable to vote"))
                                 }
                         }
                 }
             }
         }
+    }
+
+    private fun sendMessageVote(votesRequestDTO: VotesRequestDTO){
+        val postVoteMessage = PostVoteMessage(votesRequestDTO.idAgenda, votesRequestDTO.idAssociate, votesRequestDTO.vote)
+        mensageriaService.sendMessage(postVoteMessage)
     }
 
     private fun getSessionOpen(idAgenda: String): Mono<Session> {
