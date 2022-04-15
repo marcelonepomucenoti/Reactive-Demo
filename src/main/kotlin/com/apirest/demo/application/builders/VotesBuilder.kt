@@ -7,7 +7,6 @@ import kotlin.properties.Delegates
 class VotesBuilder {
     private lateinit var idAssociate: String
     private lateinit var idAgenda: String
-    private lateinit var idSession: String
     private var vote by Delegates.notNull<Boolean>()
 
 
@@ -32,15 +31,9 @@ class VotesBuilder {
         return this
     }
 
-    fun idSession(idSession: String): VotesBuilder {
-        this.idSession = idSession
-        return this
-    }
-
     fun build(): Votes {
         return Votes(
             idAgenda = this.idAgenda,
-            idSession = this.idSession,
             idAssociate = this.idAssociate,
             vote = this.vote
         )
