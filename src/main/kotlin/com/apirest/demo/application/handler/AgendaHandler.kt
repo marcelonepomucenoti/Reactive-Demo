@@ -31,6 +31,13 @@ class AgendaHandler(@Autowired val agendaService: AgendaService) {
             .body(agendaService.findById(id), Agenda::class.java)
     }
 
+    fun calculateResult(request: ServerRequest): Mono<ServerResponse> {
+        val id: String = request.pathVariable("id")
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(agendaService.calculateResult(id), Agenda::class.java)
+    }
+
     fun save(request: ServerRequest): Mono<ServerResponse> {
         val agendaRequestDTO = request.bodyToMono<AgendaRequestDTO>()
         return created(URI.create("teste"))

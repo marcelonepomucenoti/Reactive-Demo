@@ -7,11 +7,10 @@ import com.apirest.demo.application.entity.Associate
 import com.apirest.demo.application.entity.Session
 import com.apirest.demo.application.entity.Votes
 import com.apirest.demo.application.model.PostVoteMessage
+import com.apirest.demo.application.repository.AssociateRepository
+import com.apirest.demo.application.repository.SessionRepository
 import com.apirest.demo.application.repository.VotesRepository
-import com.apirest.demo.application.service.AssociateService
-import com.apirest.demo.application.service.MensageriaService
-import com.apirest.demo.application.service.SessionService
-import com.apirest.demo.application.service.VotesService
+import com.apirest.demo.application.service.*
 import com.apirest.demo.application.vo.ValidateCpfResponseVo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -23,8 +22,8 @@ import java.util.*
 
 @Service
 class VotesServiceImpl(
-    @Autowired val associateService: AssociateService,
-    @Autowired val sessionService: SessionService,
+    @Autowired val associateRepository: AssociateRepository,
+    @Autowired val sessionRepository: SessionRepository,
     @Autowired val votesRepository: VotesRepository,
     @Autowired val validateCpfWebClient: ValidateCpfWebClient,
     @Autowired val mensageriaService: MensageriaService
@@ -70,7 +69,7 @@ class VotesServiceImpl(
     }
 
     private fun getSessionOpen(idAgenda: String): Mono<Session> {
-        return sessionService.findByIdAgenda(idAgenda).switchIfEmpty {
+        return sessionRepository.findByIdAgenda(idAgenda).switchIfEmpty {
                 Mono.error(
                     ResponseStatusException(
                         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -87,7 +86,7 @@ class VotesServiceImpl(
     }
 
     private fun getAssociate(idAssociate: String): Mono<Associate> {
-        return associateService.findById(idAssociate).switchIfEmpty {
+        return associateRepository.findById(idAssociate).switchIfEmpty {
             Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Associate not found!"))
         }
     }

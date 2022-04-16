@@ -4,11 +4,11 @@ import com.apirest.demo.application.builders.AssociateBuilder
 import com.apirest.demo.application.builders.SessionBuilder
 import com.apirest.demo.application.builders.VotesBuilder
 import com.apirest.demo.application.dto.VotesRequestDTO
+import com.apirest.demo.application.repository.AssociateRepository
+import com.apirest.demo.application.repository.SessionRepository
 import com.apirest.demo.application.repository.VotesRepository
 import com.apirest.demo.application.restClient.ValidateCpfWebClient
-import com.apirest.demo.application.service.AssociateService
 import com.apirest.demo.application.service.MensageriaService
-import com.apirest.demo.application.service.SessionService
 import com.apirest.demo.application.service.VotesService
 import com.apirest.demo.application.vo.ValidateCpfResponseVo
 import org.junit.jupiter.api.Assertions.*
@@ -33,10 +33,10 @@ internal class VotesServiceImplTest {
     private lateinit var votesRepository: VotesRepository
 
     @Mock
-    private lateinit var associateService: AssociateService
+    private lateinit var associateRepository: AssociateRepository
 
     @Mock
-    private lateinit var sessionService: SessionService
+    private lateinit var sessionRespository: SessionRepository
 
     @Mock
     private lateinit var validateCpfWebClient: ValidateCpfWebClient
@@ -46,7 +46,7 @@ internal class VotesServiceImplTest {
 
     @BeforeEach
     fun setup() {
-        votesService = VotesServiceImpl(associateService, sessionService, votesRepository, validateCpfWebClient, mensageriaService)
+        votesService = VotesServiceImpl(associateRepository, sessionRespository, votesRepository, validateCpfWebClient, mensageriaService)
     }
 
     @Test
@@ -109,7 +109,7 @@ internal class VotesServiceImplTest {
 
     @Test
     fun `should save thrown error if associate not found`() {
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.empty())
 
         val votesRequestDTO = VotesRequestDTO("idAssociate", "idAgenda", true)
@@ -126,9 +126,9 @@ internal class VotesServiceImplTest {
     fun `should save thrown error if session not found`() {
         val associate = AssociateBuilder.builder().name("name").cpf("cpf").build()
 
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.empty())
 
         val votesRequestDTO = VotesRequestDTO("idAssociate", "idAgenda", true)
@@ -146,9 +146,9 @@ internal class VotesServiceImplTest {
         val date = Date()
         val associate = AssociateBuilder.builder().name("name").cpf("cpf").build()
         val session = SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").validity(date).build()
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.just(session))
 
         Mockito.`when`(validateCpfWebClient.validateCpf(anyString()))
@@ -168,9 +168,9 @@ internal class VotesServiceImplTest {
     fun `should save thrown error if cpf is invalid`() {
         val associate = AssociateBuilder.builder().name("name").cpf("cpf").build()
         val session = SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").build()
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.just(session))
         Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
             .thenReturn(Mono.empty())
@@ -194,9 +194,9 @@ internal class VotesServiceImplTest {
         val votesFindByIdAgendaAndIdAssociate =
             VotesBuilder.builder().vote(true).idAgenda("idAgenda").idAssociate("idAssociate").build()
 
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.just(session))
         Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
             .thenReturn(Mono.just(votesFindByIdAgendaAndIdAssociate))
@@ -217,9 +217,9 @@ internal class VotesServiceImplTest {
         val session = SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").build()
         val validateCpfResponseVo = ValidateCpfResponseVo("UNABLE_TO_VOTE")
 
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.just(session))
         Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
             .thenReturn(Mono.empty())
@@ -243,9 +243,9 @@ internal class VotesServiceImplTest {
         val validateCpfResponseVo = ValidateCpfResponseVo("ABLE_TO_VOTE")
         val votesSave = VotesBuilder.builder().idAgenda("idAgenda").vote(true).idAssociate("idAssociate").build()
 
-        Mockito.`when`(associateService.findById(anyString()))
+        Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.just(associate))
-        Mockito.`when`(sessionService.findByIdAgenda(anyString()))
+        Mockito.`when`(sessionRespository.findByIdAgenda(anyString()))
             .thenReturn(Mono.just(session))
         Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
             .thenReturn(Mono.empty())

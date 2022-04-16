@@ -3,7 +3,10 @@ package com.apirest.demo.application.service.impl
 import com.apirest.demo.application.builders.AgendaBuilder
 import com.apirest.demo.application.dto.AgendaRequestDTO
 import com.apirest.demo.application.repository.AgendaRepository
+import com.apirest.demo.application.repository.SessionRepository
+import com.apirest.demo.application.repository.VotesRepository
 import com.apirest.demo.application.service.AgendaService
+import com.apirest.demo.application.service.MensageriaService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,9 +27,18 @@ internal class AgendaServiceImplTest {
     @Mock
     private lateinit var agendaRepository: AgendaRepository
 
+    @Mock
+    private lateinit var votesRepository: VotesRepository
+
+    @Mock
+    private lateinit var sessionRepository: SessionRepository
+
+    @Mock
+    private lateinit var mensageriaService: MensageriaService
+
     @BeforeEach
     fun setup() {
-        agendaService = AgendaServiceImpl(agendaRepository)
+        agendaService = AgendaServiceImpl(agendaRepository, sessionRepository, votesRepository, mensageriaService)
     }
 
     @Test

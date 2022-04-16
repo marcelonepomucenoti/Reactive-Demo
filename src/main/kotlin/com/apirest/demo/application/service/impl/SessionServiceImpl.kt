@@ -4,8 +4,8 @@ import com.apirest.demo.application.builders.SessionBuilder
 import com.apirest.demo.application.dto.SessionRequestDTO
 import com.apirest.demo.application.entity.Agenda
 import com.apirest.demo.application.entity.Session
+import com.apirest.demo.application.repository.AgendaRepository
 import com.apirest.demo.application.repository.SessionRepository
-import com.apirest.demo.application.service.AgendaService
 import com.apirest.demo.application.service.SessionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -18,7 +18,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 @Service
 class SessionServiceImpl(
     @Autowired val sessionRepository: SessionRepository,
-    @Autowired val agendaService: AgendaService
+    @Autowired val agendaRepository: AgendaRepository
 ) : SessionService {
 
     override fun findAll(): Flux<Session> {
@@ -38,7 +38,7 @@ class SessionServiceImpl(
             .map { a -> Session(a.getIdAgenda(), a.getNameAgenda(), a.getValidity()) }.flatMap<Session?> {
                 Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Agenda already has session!"))
             }.switchIfEmpty {
-                agendaService.findById(sessionRequestDTO.idAgenda).map { p -> Agenda(p.getName()) }.flatMap {
+                agendaRepository.findById(sessionRequestDTO.idAgenda).map { p -> Agenda(p.getName()) }.flatMap {
                     val session: Session = SessionBuilder.builder()
                         .validity(sessionRequestDTO.validity)
                         .idAgenda(sessionRequestDTO.idAgenda)
