@@ -10,4 +10,5 @@ interface AgendaService {
     fun findById(id: String): Mono<Agenda>
     fun findByName(name: String): Mono<Agenda>
     fun save(agendaRequestDTO: AgendaRequestDTO): Mono<Agenda>
+    fun calculateResult(idAgenda: String): Mono<Agenda>
 }

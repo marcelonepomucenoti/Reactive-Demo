@@ -4,8 +4,8 @@ import com.apirest.demo.application.builders.SessionBuilder
 import com.apirest.demo.application.dto.SessionRequestDTO
 import com.apirest.demo.application.entity.Agenda
 import com.apirest.demo.application.entity.Session
+import com.apirest.demo.application.repository.AgendaRepository
 import com.apirest.demo.application.repository.SessionRepository
-import com.apirest.demo.application.service.AgendaService
 import com.apirest.demo.application.service.SessionService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -29,11 +29,11 @@ internal class SessionServiceImplTest {
     private lateinit var sessionRepository: SessionRepository
 
     @Mock
-    private lateinit var agendaService: AgendaService
+    private lateinit var agendaRepository: AgendaRepository
 
     @BeforeEach
     fun setup() {
-        sessionService = SessionServiceImpl(sessionRepository, agendaService)
+        sessionService = SessionServiceImpl(sessionRepository, agendaRepository)
     }
 
     @Test
@@ -140,7 +140,7 @@ internal class SessionServiceImplTest {
     @Test
     fun `should thrown exception on try save with Unidentified agenda`() {
         Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.empty())
-        Mockito.`when`(agendaService.findById(anyString())).thenReturn(Mono.empty())
+        Mockito.`when`(agendaRepository.findById(anyString())).thenReturn(Mono.empty())
 
         val sessionRequestDTO = SessionRequestDTO("idAgenda", Date())
 
@@ -159,7 +159,7 @@ internal class SessionServiceImplTest {
         val sessionSave = Session("idAgenda", "nameAgenda", date)
 
         Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.empty())
-        Mockito.`when`(agendaService.findById(anyString())).thenReturn(Mono.just(agendaFindById))
+        Mockito.`when`(agendaRepository.findById(anyString())).thenReturn(Mono.just(agendaFindById))
         Mockito.`when`(sessionRepository.save(any())).thenReturn(Mono.just(sessionSave))
 
         val sessionRequestDTO = SessionRequestDTO("idAgenda", date)
@@ -192,7 +192,7 @@ internal class SessionServiceImplTest {
         val sessionSave = Session("idAgenda", "nameAgenda", date)
 
         Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.empty())
-        Mockito.`when`(agendaService.findById(anyString())).thenReturn(Mono.just(agendaFindById))
+        Mockito.`when`(agendaRepository.findById(anyString())).thenReturn(Mono.just(agendaFindById))
         Mockito.`when`(sessionRepository.save(any())).thenReturn(Mono.just(sessionSave))
 
         val sessionRequestDTO = SessionRequestDTO("idAgenda", null)
