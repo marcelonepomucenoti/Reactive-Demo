@@ -2,6 +2,7 @@ package com.apirest.demo.application.service.impl
 
 import com.apirest.demo.application.builders.AgendaBuilder
 import com.apirest.demo.application.dto.AgendaRequestDTO
+import com.apirest.demo.application.dto.AgendaResponseDTO
 import com.apirest.demo.application.entity.Agenda
 import com.apirest.demo.application.model.ResultVotesMessage
 import com.apirest.demo.application.repository.AgendaRepository
@@ -25,33 +26,31 @@ class AgendaServiceImpl(
     @Autowired val votesRepository: VotesRepository,
     @Autowired val mensageriaService: MensageriaService
 ) : AgendaService {
-    override fun findAll(): Flux<Agenda> {
-        return agendaRepository.findAll()
+    override fun findAll(): Flux<AgendaResponseDTO> {
+        return agendaRepository.findAll().map { AgendaResponseDTO().agendaToAgendaResponseDTO(it) }
     }
 
-    override fun findById(id: String): Mono<Agenda> {
-        return agendaRepository.findById(id)
+    override fun findById(id: String): Mono<AgendaResponseDTO> {
+        return agendaRepository.findById(id).map { AgendaResponseDTO().agendaToAgendaResponseDTO(it) }
     }
 
-    override fun findByName(name: String): Mono<Agenda> {
-        return agendaRepository.findByName(name)
-    }
-
-    override fun save(agendaRequestDTO: AgendaRequestDTO): Mono<Agenda> {
-        return this.findByName(agendaRequestDTO.name).mapNotNull { p -> Agenda(p.getName()) }.flatMap<Agenda> {
+    override fun save(agendaRequestDTO: AgendaRequestDTO): Mono<AgendaResponseDTO> {
+        return agendaRepository.findByName(agendaRequestDTO.name).flatMap<Agenda> {
             Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Agenda already registered!"))
         }.switchIfEmpty {
             val agenda: Agenda = AgendaBuilder.builder().name(agendaRequestDTO.name).build()
             agendaRepository.save(agenda)
-        }
+        }.map { AgendaResponseDTO().agendaToAgendaResponseDTO(it) }
     }
 
-    override fun calculateResult(idAgenda: String): Mono<Agenda> {
+    override fun calculateResult(idAgenda: String): Mono<AgendaResponseDTO> {
         return agendaRepository.findById(idAgenda).flatMap { agenda ->
             if(agenda.getIsAccountedAgenda())
                 Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Agenda has already been accounted for"))
             else
-                sessionRepository.findByIdAgenda(idAgenda).flatMap {
+                sessionRepository.findByIdAgenda(idAgenda).switchIfEmpty{
+                    Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Session not opened for this agenda"))
+                } .flatMap {
                     if(it.getValidity() > Date())
                         Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Agenda can still receive votes"))
                     else
@@ -62,7 +61,7 @@ class AgendaServiceImpl(
                             agenda.setIsAccountedAgenda(true)
                             val resultVotesMessage = ResultVotesMessage(idAgenda, agenda.getName(), agenda.getReceivedVotesTrue(), agenda.getReceivedVotesFalse() )
                             mensageriaService.sendMessage(resultVotesMessage)
-                        }.then(agendaRepository.save(agenda))
+                        }.then(agendaRepository.save(agenda).map { AgendaResponseDTO().agendaToAgendaResponseDTO(it)})
             }
         }
     }
