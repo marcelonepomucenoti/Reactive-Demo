@@ -2,6 +2,7 @@ package com.apirest.demo.application.service.impl
 
 import com.apirest.demo.application.builders.SessionBuilder
 import com.apirest.demo.application.dto.SessionRequestDTO
+import com.apirest.demo.application.dto.SessionResponseDTO
 import com.apirest.demo.application.entity.Agenda
 import com.apirest.demo.application.entity.Session
 import com.apirest.demo.application.repository.AgendaRepository
@@ -21,20 +22,16 @@ class SessionServiceImpl(
     @Autowired val agendaRepository: AgendaRepository
 ) : SessionService {
 
-    override fun findAll(): Flux<Session> {
-        return sessionRepository.findAll()
+    override fun findAll(): Flux<SessionResponseDTO> {
+        return sessionRepository.findAll().map { SessionResponseDTO().sessionToSessionResponseDTO(it) }
     }
 
-    override fun findById(id: String): Mono<Session> {
-        return sessionRepository.findById(id)
+    override fun findById(id: String): Mono<SessionResponseDTO> {
+        return sessionRepository.findById(id).map { SessionResponseDTO().sessionToSessionResponseDTO(it) }
     }
 
-    override fun findByIdAgenda(idAgenda: String): Mono<Session> {
-        return sessionRepository.findByIdAgenda(idAgenda)
-    }
-
-    override fun save(sessionRequestDTO: SessionRequestDTO): Mono<Session> {
-        return this.findByIdAgenda(sessionRequestDTO.idAgenda)
+    override fun save(sessionRequestDTO: SessionRequestDTO): Mono<SessionResponseDTO> {
+        return sessionRepository.findByIdAgenda(sessionRequestDTO.idAgenda)
             .map { a -> Session(a.getIdAgenda(), a.getNameAgenda(), a.getValidity()) }.flatMap<Session?> {
                 Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Agenda already has session!"))
             }.switchIfEmpty {
@@ -49,6 +46,6 @@ class SessionServiceImpl(
                 }.switchIfEmpty {
                     Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Unidentified agenda!"))
                 }
-            }
+            }.map { SessionResponseDTO().sessionToSessionResponseDTO(it) }
     }
 }

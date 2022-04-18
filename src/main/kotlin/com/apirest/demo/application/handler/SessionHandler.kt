@@ -1,7 +1,7 @@
 package com.apirest.demo.application.handler
 
 import com.apirest.demo.application.dto.SessionRequestDTO
-import com.apirest.demo.application.entity.Session
+import com.apirest.demo.application.dto.SessionResponseDTO
 import com.apirest.demo.application.service.SessionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -21,20 +21,20 @@ class SessionHandler(@Autowired val sessionService: SessionService) {
     fun findAll(request: ServerRequest): Mono<ServerResponse> {
         return ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(sessionService.findAll(), Session::class.java)
+            .body(fromPublisher(sessionService.findAll(), SessionResponseDTO::class.java))
     }
 
     fun findById(request: ServerRequest): Mono<ServerResponse> {
         val id: String = request.pathVariable("id")
         return ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(sessionService.findById(id), Session::class.java)
+            .body(fromPublisher(sessionService.findById(id), SessionResponseDTO::class.java))
     }
 
     fun save(request: ServerRequest): Mono<ServerResponse> {
         val sessionRequestDTO = request.bodyToMono<SessionRequestDTO>()
         return created(URI.create("teste"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(fromPublisher(sessionRequestDTO.flatMap(sessionService::save), Session::class.java))
+            .body(fromPublisher(sessionRequestDTO.flatMap(sessionService::save), SessionResponseDTO::class.java))
     }
 }
