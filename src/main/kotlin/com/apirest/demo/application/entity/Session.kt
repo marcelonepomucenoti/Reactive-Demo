@@ -17,6 +17,10 @@ class Session(
         return this.id
     }
 
+    fun setId(id: String){
+        this.id = id
+    }
+
     fun getIdAgenda(): String {
         return this.idAgenda
     }

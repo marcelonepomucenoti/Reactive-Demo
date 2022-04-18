@@ -41,6 +41,7 @@ internal class SessionServiceImplTest {
         val date = Date()
         val sessionFindAll =
             SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").validity(date).build()
+        sessionFindAll.setId("idSession")
         Mockito.`when`(sessionRepository.findAll()).thenReturn(Flux.just(sessionFindAll))
 
         val agenda = sessionService.findAll()
@@ -67,9 +68,10 @@ internal class SessionServiceImplTest {
     @Test
     fun `should return session by id`() {
         val date = Date()
-        val sessionFindAll =
+        val sessionFindById =
             SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").validity(date).build()
-        Mockito.`when`(sessionRepository.findById(anyString())).thenReturn(Mono.just(sessionFindAll))
+        sessionFindById.setId("idSession")
+        Mockito.`when`(sessionRepository.findById(anyString())).thenReturn(Mono.just(sessionFindById))
 
         val agenda = sessionService.findById("id")
 
@@ -93,39 +95,13 @@ internal class SessionServiceImplTest {
     }
 
     @Test
-    fun `should return session by idAgenda`() {
-        val date = Date()
-        val sessionFindAll =
-            SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").validity(date).build()
-        Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.just(sessionFindAll))
-
-        val agenda = sessionService.findByIdAgenda("id")
-
-        StepVerifier
-            .create(agenda)
-            .consumeNextWith {
-                Assertions.assertEquals(
-                    it.getIdAgenda(),
-                    "idAgenda"
-                )
-                Assertions.assertEquals(
-                    it.getNameAgenda(),
-                    "nameAgenda"
-                )
-                Assertions.assertEquals(
-                    it.getValidity(),
-                    date
-                )
-            }
-            .verifyComplete()
-    }
-
-    @Test
     fun `should thrown exception on try save with Agenda already has session`() {
         val date = Date()
-        val sessionFindAll =
+        val sessionFindByIdAgenda =
             SessionBuilder.builder().idAgenda("idAgenda").nameAgenda("nameAgenda").validity(date).build()
-        Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.just(sessionFindAll))
+        sessionFindByIdAgenda.setId("idSession")
+
+        Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.just(sessionFindByIdAgenda))
 
         val sessionRequestDTO = SessionRequestDTO("idAgenda", Date())
 
@@ -157,6 +133,7 @@ internal class SessionServiceImplTest {
         val agendaFindById = Agenda("nameAgenda")
         val date = Date()
         val sessionSave = Session("idAgenda", "nameAgenda", date)
+        sessionSave.setId("idSession")
 
         Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.empty())
         Mockito.`when`(agendaRepository.findById(anyString())).thenReturn(Mono.just(agendaFindById))
@@ -190,6 +167,7 @@ internal class SessionServiceImplTest {
         val agendaFindById = Agenda("nameAgenda")
         val date = Date()
         val sessionSave = Session("idAgenda", "nameAgenda", date)
+        sessionSave.setId("idSession")
 
         Mockito.`when`(sessionRepository.findByIdAgenda(anyString())).thenReturn(Mono.empty())
         Mockito.`when`(agendaRepository.findById(anyString())).thenReturn(Mono.just(agendaFindById))
