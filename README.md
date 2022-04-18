@@ -22,6 +22,10 @@ This solution must run in the cloud and provide the following functionality thro
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
+
+### Notes
+- Vession validity must be sent in utc
+
 ### Git Flow
 1. Create a branch from main
 2. Open a PR and wait for approval to merge
