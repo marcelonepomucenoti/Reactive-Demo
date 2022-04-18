@@ -1,7 +1,7 @@
 package com.apirest.demo.application.handler
 
 import com.apirest.demo.application.dto.VotesRequestDTO
-import com.apirest.demo.application.entity.Votes
+import com.apirest.demo.application.dto.VotesResponseDTO
 import com.apirest.demo.application.service.VotesService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -19,6 +19,6 @@ class VotesHandler(@Autowired val votesService: VotesService) {
         val votesRequestDTO = request.bodyToMono<VotesRequestDTO>()
         return ServerResponse.created(URI.create("teste"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(fromPublisher(votesRequestDTO.flatMap(votesService::save), Votes::class.java))
+            .body(fromPublisher(votesRequestDTO.flatMap(votesService::save), VotesResponseDTO::class.java))
     }
 }

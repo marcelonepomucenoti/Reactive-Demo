@@ -50,64 +50,6 @@ internal class VotesServiceImplTest {
     }
 
     @Test
-    fun `should return Votes by idAgenda and IdAssociate vote true`() {
-        val votesFindByIdAgendaAndIdAssociate =
-            VotesBuilder.builder().idAssociate("idAssociate").idAgenda("idAgenda").vote(true).build()
-
-        Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
-            .thenReturn(Mono.just(votesFindByIdAgendaAndIdAssociate))
-
-        val votes = votesService.findByIdAgendaAndIdAssociate("idAgenda", "idAssociate")
-
-        StepVerifier
-            .create(votes)
-            .consumeNextWith {
-                assertEquals(
-                    it.getIdAgenda(),
-                    votesFindByIdAgendaAndIdAssociate.getIdAgenda()
-                )
-                assertEquals(
-                    it.getIdAssociate(),
-                    votesFindByIdAgendaAndIdAssociate.getIdAssociate()
-                )
-                assertEquals(
-                    it.getVote(),
-                    votesFindByIdAgendaAndIdAssociate.getVote()
-                )
-            }
-            .verifyComplete()
-    }
-
-    @Test
-    fun `should return Votes by idAgenda and IdAssociate vote false`() {
-        val votesFindByIdAgendaAndIdAssociate =
-            VotesBuilder.builder().idAssociate("idAssociate").idAgenda("idAgenda").vote(false).build()
-
-        Mockito.`when`(votesRepository.findByIdAgendaAndIdAssociate(anyString(), anyString()))
-            .thenReturn(Mono.just(votesFindByIdAgendaAndIdAssociate))
-
-        val votes = votesService.findByIdAgendaAndIdAssociate("idAgenda", "idAssociate")
-
-        StepVerifier
-            .create(votes)
-            .consumeNextWith {
-                assertEquals(
-                    it.getIdAgenda(),
-                    votesFindByIdAgendaAndIdAssociate.getIdAgenda()
-                )
-                assertEquals(
-                    it.getIdAssociate(),
-                    votesFindByIdAgendaAndIdAssociate.getIdAssociate()
-                )
-                assertEquals(
-                    it.getVote(),
-                    votesFindByIdAgendaAndIdAssociate.getVote()
-                )
-            }
-            .verifyComplete()
-    }
-
-    @Test
     fun `should save thrown error if associate not found`() {
         Mockito.`when`(associateRepository.findById(anyString()))
             .thenReturn(Mono.empty())

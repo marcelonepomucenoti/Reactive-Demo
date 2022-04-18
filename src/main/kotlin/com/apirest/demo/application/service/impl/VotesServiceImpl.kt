@@ -3,6 +3,7 @@ package com.apirest.demo.application.service.impl
 import com.apirest.demo.application.builders.VotesBuilder
 import com.apirest.demo.application.restClient.ValidateCpfWebClient
 import com.apirest.demo.application.dto.VotesRequestDTO
+import com.apirest.demo.application.dto.VotesResponseDTO
 import com.apirest.demo.application.entity.Associate
 import com.apirest.demo.application.entity.Session
 import com.apirest.demo.application.entity.Votes
@@ -29,17 +30,13 @@ class VotesServiceImpl(
     @Autowired val mensageriaService: MensageriaService
 ) : VotesService {
 
-    override fun findByIdAgendaAndIdAssociate(idAgenda: String, idAssociate: String): Mono<Votes> {
-        return votesRepository.findByIdAgendaAndIdAssociate(idAgenda, idAssociate)
-    }
-
-    override fun save(votesRequestDTO: VotesRequestDTO): Mono<Votes> {
+    override fun save(votesRequestDTO: VotesRequestDTO): Mono<VotesResponseDTO> {
         return this.getAssociate(votesRequestDTO.idAssociate).flatMap { associate ->
             getSessionOpen(votesRequestDTO.idAgenda).flatMap {session ->
                 if (session.getValidity() < Date())
                     Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Voting closed!"))
                 else {
-                    this.findByIdAgendaAndIdAssociate(votesRequestDTO.idAgenda, votesRequestDTO.idAssociate)
+                    votesRepository.findByIdAgendaAndIdAssociate(votesRequestDTO.idAgenda, votesRequestDTO.idAssociate)
                         .flatMap<Votes> { Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Vote already registered for this member!"))
                         }.switchIfEmpty {
                             validateCPF(associate.getCpf())
@@ -60,7 +57,7 @@ class VotesServiceImpl(
                         }
                 }
             }
-        }
+        }.map { VotesResponseDTO().votesToVotesResponseDTO(it) }
     }
 
     private fun sendMessageVote(votesRequestDTO: VotesRequestDTO){
