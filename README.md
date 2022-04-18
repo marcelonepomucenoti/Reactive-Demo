@@ -1,7 +1,7 @@
 <h1 align="center">Reactive Demo Webflux</h1>
 
 ## Description
-###Objective
+#### Objective
 In cooperativism, each member has one vote and decisions are taken in assemblies, by voting.
 
 From there, you need to build a backend solution to manage these voting sessions.
@@ -9,7 +9,7 @@ From there, you need to build a backend solution to manage these voting sessions
 
 This solution must run in the cloud and provide the following functionality through a REST API.
 
-###Features
+#### Features
 * Register a new agenda;
 * Open a voting session on an agenda (the voting session must be open for a specified time in the opening call or 1 minute by default);
 * Receive votes from members on agendas (votes are only Yes/No. Each member is identified by a unique id and can only vote once per agenda);
