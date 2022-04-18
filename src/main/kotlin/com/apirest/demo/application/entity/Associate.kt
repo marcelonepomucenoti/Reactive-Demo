@@ -15,6 +15,10 @@ class Associate(
         return this.id
     }
 
+    fun setId(id: String){
+        this.id = id
+    }
+
     fun getName(): String {
         return this.name
     }

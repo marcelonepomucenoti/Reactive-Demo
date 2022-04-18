@@ -30,6 +30,7 @@ internal class AssociateServiceImplTest {
     @Test
     fun `should return associate by id`() {
         val associateFindById = AssociateBuilder.builder().name("name").cpf("cpf").build()
+        associateFindById.setId("idAssociate")
         Mockito.`when`(associateRepository.findById(ArgumentMatchers.anyString()))
             .thenReturn(Mono.just(associateFindById))
 
@@ -52,9 +53,10 @@ internal class AssociateServiceImplTest {
 
     @Test
     fun `should return associate by cpf`() {
-        val associateFindById = AssociateBuilder.builder().name("name").cpf("cpf").build()
+        val associateFindByCpf = AssociateBuilder.builder().name("name").cpf("cpf").build()
+        associateFindByCpf.setId("idAssociate")
         Mockito.`when`(associateRepository.findByCpf(ArgumentMatchers.anyString()))
-            .thenReturn(Mono.just(associateFindById))
+            .thenReturn(Mono.just(associateFindByCpf))
 
         val associate = associateService.findByCpf("cpf")
 
@@ -76,6 +78,7 @@ internal class AssociateServiceImplTest {
     @Test
     fun `should save new associate`() {
         val associateSave = AssociateBuilder.builder().name("name").cpf("cpf").build()
+        associateSave.setId("idAssociate")
         Mockito.`when`(associateRepository.findByCpf(ArgumentMatchers.anyString()))
             .thenReturn(Mono.empty())
         Mockito.`when`(associateRepository.save(any()))

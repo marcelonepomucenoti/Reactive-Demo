@@ -2,6 +2,7 @@ package com.apirest.demo.application.service.impl
 
 import com.apirest.demo.application.builders.AssociateBuilder
 import com.apirest.demo.application.dto.AssociateRequestDTO
+import com.apirest.demo.application.dto.AssociateResponseDTO
 import com.apirest.demo.application.entity.Associate
 import com.apirest.demo.application.repository.AssociateRepository
 import com.apirest.demo.application.service.AssociateService
@@ -15,16 +16,16 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 @Service
 class AssociateServiceImpl(@Autowired val associateRepository: AssociateRepository) : AssociateService {
 
-    override fun findByCpf(cpf: String): Mono<Associate> {
-        return associateRepository.findByCpf(cpf)
+    override fun findByCpf(cpf: String): Mono<AssociateResponseDTO> {
+        return associateRepository.findByCpf(cpf).map { AssociateResponseDTO().associateToAssociateResponseDTO(it) }
     }
 
-    override fun findById(id: String): Mono<Associate> {
-        return associateRepository.findById(id)
+    override fun findById(id: String): Mono<AssociateResponseDTO> {
+        return associateRepository.findById(id).map { AssociateResponseDTO().associateToAssociateResponseDTO(it) }
     }
 
-    override fun save(associateRequestDTO: AssociateRequestDTO): Mono<Associate> {
-        return this.findByCpf(associateRequestDTO.cpf).mapNotNull { p -> Associate(p.getName(), p.getCpf()) }
+    override fun save(associateRequestDTO: AssociateRequestDTO): Mono<AssociateResponseDTO> {
+        return associateRepository.findByCpf(associateRequestDTO.cpf).mapNotNull { p -> Associate(p.getName(), p.getCpf()) }
             .flatMap<Associate> {
                 Mono.error(ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "member already registered!"))
             }.switchIfEmpty {
@@ -34,6 +35,6 @@ class AssociateServiceImpl(@Autowired val associateRepository: AssociateReposito
                         .cpf(associateRequestDTO.cpf)
                         .build()
                 associateRepository.save(associate)
-            }
+            }.map { AssociateResponseDTO().associateToAssociateResponseDTO(it) }
     }
 }
