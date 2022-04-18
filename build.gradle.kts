@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springdoc:springdoc-openapi-webflux-core:1.6.7")
+	implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.7")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
