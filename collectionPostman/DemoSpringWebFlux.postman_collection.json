@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "c2d232e3-f680-4f8e-8635-f308fd02df38",
+		"name": "DemoSpringWebFlux",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Agenda",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/agenda",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"agenda"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/agenda/625d88e20cce170b09878160",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"agenda",
+								"625d88e20cce170b09878160"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Terceira\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{demoUrl}}/agenda",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"agenda"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Result",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{demoUrl}}/agenda/calculateResult/625c92bcb5422906ca9c2815",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"agenda",
+								"calculateResult",
+								"625c92bcb5422906ca9c2815"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/session",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/session/625b2958cca3cf7d5dbb205b",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"session",
+								"625b2958cca3cf7d5dbb205b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idAgenda\": \"625c92bcb5422906ca9c2815\",\n    \"validity\": \"2022-04-18T15:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{demoUrl}}/session",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save WithOut Validity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idAgenda\": \"625b26e98aee150f7590f1d7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{demoUrl}}/session",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Associate",
+			"item": [
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"asdf\",\n    \"cpf\": \"70710037007\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{demoUrl}}/associate",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"associate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/associate/findById/625cae4dfb658e62abddc4b0",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"associate",
+								"findById",
+								"625cae4dfb658e62abddc4b0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByCpf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{demoUrl}}/associate/findByCpf/70710037007",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"associate",
+								"findByCpf",
+								"70710037007"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Votes",
+			"item": [
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idAssociate\": \"625cae4dfb658e62abddc4b0\",\n    \"idAgenda\": \"625c92bcb5422906ca9c2815\",\n    \"vote\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{demoUrl}}/votes",
+							"host": [
+								"{{demoUrl}}"
+							],
+							"path": [
+								"votes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ValidateCPF",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://user-info.herokuapp.com/users/12878666623",
+					"protocol": "https",
+					"host": [
+						"user-info",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"12878666623"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

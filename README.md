@@ -70,3 +70,5 @@ http://localhost:8080/
 ```
 http://localhost:8080/swagger-doc/swagger-ui.html
 ```
+### Collection Postman
+Collection is located inside the /collectionPostman folder
