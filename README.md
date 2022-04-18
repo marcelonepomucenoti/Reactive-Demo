@@ -27,7 +27,7 @@ This solution must run in the cloud and provide the following functionality thro
 2. Open a PR and wait for approval to merge
 3. After merged into the master, generate a tag following semantic versioning, to learn more, go to [link](https://imasters.com.br/codigo/versionamento-semantico-o-que-e-e-como-usar)
 
-###Pre-Execution Requirements
+### Pre-Execution Requirements
 1. Create a folder called `rabbitmq` in the project root, as shown below:
 
 ![img.png](ReadmeImg/newFolderRabbitMQ.png)
@@ -61,12 +61,12 @@ docker-compose up -d
 
 ![img.png](ReadmeImg/VMOptions.png)
 
-###URL Local
+### URL Local
 ```
 http://localhost:8080/
 ```
 
-###URL Swagger
+### URL Swagger
 ```
 http://localhost:8080/swagger-doc/swagger-ui.html
 ```
